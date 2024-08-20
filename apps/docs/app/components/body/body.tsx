@@ -3,10 +3,13 @@ import React from 'react';
 import { useCommunicator } from '@repo/core/communicator';
 import { useEffect, useState } from 'react';
 
-const messageFromDoc = 'this is message from docs';
+const firstMessageFromDoc = 'this is 1st message from docs';
 
 function Body() {
   const { port2 } = useCommunicator();
+  const [isInit, setIsInit] = useState(false);
+  const [isConnect, setIsConnect] = useState(false);
+  const [isFirstMsgPosted, setIsFirstMsgPosted] = useState(false);
   const [message, setMessage] = useState('no message received');
 
   useEffect(() => {
@@ -17,17 +20,24 @@ function Body() {
     // };
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== 'http://localhost:3000') return;
-      setMessage(event.data);
+      setMessage(`${event.data} (id: ${event.lastEventId})`);
+      if (!isConnect) {
+        setIsConnect(true);
+      }
       // event?.ports[0]?.postMessage(messageFromDoc);
     };
-    const parentElement = window.parent;
-    console.log(parentElement);
-    parentElement?.postMessage(messageFromDoc, 'http://localhost:3000');
+    if (!isInit && !isConnect) {
+      setIsInit(true);
+      const parentElement = window.parent;
+      console.log(parentElement);
+      parentElement?.postMessage(firstMessageFromDoc, 'http://localhost:3000');
+      setIsFirstMsgPosted(true);
+    }
     window.addEventListener('message', handleMessage);
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [message]);
+  }, [message, isConnect]);
 
   return (
     <div>

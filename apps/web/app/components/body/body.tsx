@@ -3,30 +3,44 @@ import React from 'react';
 import { useCommunicator } from '@repo/core/communicator';
 import { useEffect, useState } from 'react';
 
-const messageFromWeb = 'this is message from web';
+const firstMessageFromWeb = 'this is 1st message from web';
 export const wait = (second: number) =>
   new Promise((res) => setTimeout(res, second * 1000));
 
 function Body() {
   const { port1, port2 } = useCommunicator();
+  const [isConnect, setIsConnect] = useState(false);
+  const [isFirstMsgPosted, setIsFirstMsgPosted] = useState(false);
+  const [isInit, setIsInit] = useState(false);
   const [message, setMessage] = useState('no message receive');
 
   useEffect(() => {
     const handleHandShakeMessage = (event: MessageEvent) => {
       if (event.origin !== 'http://localhost:3001') return;
       console.log('connected to doc');
-      setMessage(event.data);
+      setMessage(`${event.data} (id: ${event.lastEventId})`);
+      if (!isConnect) {
+        setIsConnect(true);
+      }
     };
-    window.addEventListener('message', handleHandShakeMessage, false);
+
     const postMessage = async () => {
-      let iframeElement = document.querySelector('iframe');
-      console.log(iframeElement);
-      iframeElement?.contentWindow?.postMessage(
-        messageFromWeb,
-        'http://localhost:3001'
-      );
+      // let iframeElement = document.querySelector('iframe');
+      // iframeElement?.contentWindow?.postMessage(
+      //   messageFromWeb,
+      //   'http://localhost:3001'
+      // );
+      let iframeWindow = window?.top?.frames[0];
+      iframeWindow?.postMessage(firstMessageFromWeb, 'http://localhost:3001');
     };
-    postMessage();
+    if (!isInit) {
+      setIsInit(true);
+    }
+    if (isConnect && !isFirstMsgPosted) {
+      postMessage();
+      setIsFirstMsgPosted(true);
+    }
+    window.addEventListener('message', handleHandShakeMessage, false);
     // let iframeElement = document.querySelector('iframe');
     // const onMessage = (e: MessageEvent) => {
     //   console.log('msg: ', e.data);
