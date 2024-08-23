@@ -2,6 +2,7 @@
 import React from 'react';
 import { useCommunicator } from '@repo/core/communicator';
 import { useEffect, useState } from 'react';
+import eventManagerService from '../../services/eventManagerService';
 
 const firstMessageFromWeb = 'this is 1st message from web';
 export const wait = (second: number) =>
@@ -13,11 +14,11 @@ function Body() {
   const [isFirstMsgPosted, setIsFirstMsgPosted] = useState(false);
   const [isInit, setIsInit] = useState(false);
   const [message, setMessage] = useState('no message receive');
+  const [messageFromSub, setMessageFromSub] = useState('');
 
   useEffect(() => {
     const handleHandShakeMessage = (event: MessageEvent) => {
       if (event.origin !== 'http://localhost:3001') return;
-      console.log('connected to doc');
       setMessage(`${event.data} (id: ${event.lastEventId})`);
       if (!isConnect) {
         setIsConnect(true);
@@ -64,14 +65,25 @@ function Body() {
     };
   }, [message]);
 
+  useEffect(() => {
+    const headerSubscriber = eventManagerService.subscribe(
+      'headerEvent',
+      (event: any) => {
+        console.log(event);
+      }
+    );
+    return () => {
+      eventManagerService.destroy(headerSubscriber);
+    };
+  }, []);
+
   return (
-    <div>
+    <div style={{ marginTop: '10px' }}>
       <div>{'this is web'}</div>
       <div>{message}</div>
       <button
         onClick={() => {
           let iframeElement = document.querySelector('iframe');
-          console.log(iframeElement);
           iframeElement?.contentWindow?.postMessage(
             'new message from web',
             'http://localhost:3001'

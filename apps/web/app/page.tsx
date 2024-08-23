@@ -1,7 +1,13 @@
 import Body from './components/body/body';
+import Header from './components/header/header';
 
 function Page() {
-  return <Body />;
+  return (
+    <>
+      <Header />
+      <Body />;
+    </>
+  );
 }
 
 export default Page;
