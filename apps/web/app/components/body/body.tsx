@@ -3,6 +3,7 @@ import React from 'react';
 import { useCommunicator } from '@repo/core/communicator';
 import { useEffect, useState } from 'react';
 import eventManagerService from '../../services/eventManagerService';
+import eventBus from '../../services/eventBusServices';
 
 const firstMessageFromWeb = 'this is 1st message from web';
 export const wait = (second: number) =>
@@ -14,7 +15,7 @@ function Body() {
   const [isFirstMsgPosted, setIsFirstMsgPosted] = useState(false);
   const [isInit, setIsInit] = useState(false);
   const [message, setMessage] = useState('no message receive');
-  const [messageFromSub, setMessageFromSub] = useState('');
+  const [messageFromSub, setMessageFromSub] = useState('No message from sub');
 
   useEffect(() => {
     const handleHandShakeMessage = (event: MessageEvent) => {
@@ -66,14 +67,22 @@ function Body() {
   }, [message]);
 
   useEffect(() => {
-    const headerSubscriber = eventManagerService.subscribe(
-      'headerEvent',
-      (event: any) => {
-        console.log(event);
-      }
-    );
+    // const headerSubscriber = eventManagerService.subscribe(
+    //   'headerEvent',
+    //   (event: any) => {
+    //     console.log(event);
+    //     setMessageFromSub(event.data.text);
+    //   }
+    // );
+    // return () => {
+    //   eventManagerService.destroy(headerSubscriber);
+    // };
+    eventBus.on('headerEvent', (data: any) => {
+      console.log(data);
+      setMessageFromSub(data.text);
+    });
     return () => {
-      eventManagerService.destroy(headerSubscriber);
+      eventBus.remove('headerEvent');
     };
   }, []);
 
@@ -81,6 +90,7 @@ function Body() {
     <div style={{ marginTop: '10px' }}>
       <div>{'this is web'}</div>
       <div>{message}</div>
+      <div>{messageFromSub}</div>
       <button
         onClick={() => {
           let iframeElement = document.querySelector('iframe');
