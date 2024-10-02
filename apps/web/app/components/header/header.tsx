@@ -3,14 +3,19 @@ import React, { useEffect } from 'react';
 import eventManagerService from '../../services/eventManagerService';
 import eventBus from '../../services/eventBusServices';
 
+export type HeaderEventData = { text: string };
+
+// const broadCastEvent = (text: string) => {
+//   eventManagerService.broadcast({
+//     name: 'headerEvent',
+//     data: {
+//       text,
+//     },
+//   });
+// };
+
 const broadCastEvent = (text: string) => {
-  // eventManagerService.broadcast({
-  //   name: 'headerEvent',
-  //   data: {
-  //     text,
-  //   },
-  // });
-  eventBus.dispatch('headerEvent', { text });
+  eventBus.dispatch<HeaderEventData>('headerEvent', { text });
 };
 
 function Header() {

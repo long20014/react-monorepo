@@ -4,6 +4,7 @@ import { useCommunicator } from '@repo/core/communicator';
 import { useEffect, useState } from 'react';
 import eventManagerService from '../../services/eventManagerService';
 import eventBus from '../../services/eventBusServices';
+import { HeaderEventData } from '../header/header';
 
 const firstMessageFromWeb = 'this is 1st message from web';
 export const wait = (second: number) =>
@@ -77,12 +78,14 @@ function Body() {
     // return () => {
     //   eventManagerService.destroy(headerSubscriber);
     // };
-    eventBus.on('headerEvent', (data: any) => {
+    const headerEventListener = (data?: HeaderEventData) => {
+      if (!data) return;
       console.log(data);
       setMessageFromSub(data.text);
-    });
+    };
+    eventBus.on<HeaderEventData>('headerEvent', headerEventListener);
     return () => {
-      eventBus.remove('headerEvent');
+      eventBus.remove<HeaderEventData>('headerEvent', headerEventListener);
     };
   }, []);
 
