@@ -1,4 +1,6 @@
 'use client';
+import { useAppContext } from '@/context/AppContext';
+import { TOPIC_NAME } from '@/utils/constants';
 import React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -8,6 +10,8 @@ function Body() {
   const [isInit, setIsInit] = useState(false);
   const [isConnect, setIsConnect] = useState(false);
   const [message, setMessage] = useState('no message received');
+  const [messageFromSub, setMessageFromSub] = useState('No message from sub');
+  const { appState } = useAppContext();
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -29,10 +33,19 @@ function Body() {
     };
   }, [message, isConnect]);
 
+  useEffect(() => {
+    const headerEvent = appState.topicSet[TOPIC_NAME.HEADER_EVENT];
+    if (headerEvent) {
+      const data = headerEvent.message.data as { text: string };
+      setMessageFromSub(data.text);
+    }
+  }, [appState.topicSet[TOPIC_NAME.HEADER_EVENT]]);
+
   return (
     <div>
       <div>{'this is doc'}</div>
       <div>{message}</div>
+      <div>{messageFromSub}</div>
       <button
         onClick={() => {
           const parentElement = window.parent;

@@ -85,7 +85,7 @@ function Body() {
   useEffect(() => {
     const headerEvent = state.topicSet[TOPIC_NAME.HEADER_EVENT];
     if (headerEvent) {
-      setMessageFromSub(headerEvent.message.data.text);
+      setMessageFromSub((headerEvent.message.data as { text: string }).text);
     }
   }, [state.topicSet[TOPIC_NAME.HEADER_EVENT]]);
 
