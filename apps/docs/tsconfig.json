@@ -5,7 +5,11 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/static/*": ["./static/*"]
+    },
   },
   "include": [
     "next-env.d.ts",

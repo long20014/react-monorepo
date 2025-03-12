@@ -99,14 +99,14 @@ function Body() {
           let iframeElement = document.querySelector('iframe');
           iframeElement?.contentWindow?.postMessage(
             'new message from web',
-            'http://localhost:3001'
+            'http://localhost:3008'
           );
         }}
       >
         {'Send message to doc'}
       </button>
       <div>
-        <iframe src='http://localhost:3001'></iframe>
+        <iframe src='http://localhost:3008'></iframe>
       </div>
     </div>
   );
