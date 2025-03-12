@@ -28,7 +28,7 @@ function Header() {
 
   return (
     <div>
-      <div>Header</div>
+      <div>Doc Header</div>
       <button
         onClick={() =>
           broadCastEvent('2nd broadcast from header', updateAppState, appState)

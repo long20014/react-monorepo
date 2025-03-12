@@ -36,7 +36,7 @@ function Body() {
   useEffect(() => {
     const headerEvent = appState.topicSet[TOPIC_NAME.HEADER_EVENT];
     if (headerEvent) {
-      const data = headerEvent.message.data as { text: string };
+      const data = headerEvent.data as { text: string };
       setMessageFromSub(data.text);
     }
   }, [appState.topicSet[TOPIC_NAME.HEADER_EVENT]]);

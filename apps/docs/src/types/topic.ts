@@ -1,9 +1,7 @@
 
 export type Topic = {
   name: string;
-  message: {
-    data: unknown;
-  };
+  data: unknown;
 }
 
 export type TopicSet = {

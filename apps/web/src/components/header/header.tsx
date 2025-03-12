@@ -31,7 +31,7 @@ function Header() {
 
   return (
     <div>
-      <div>Header</div>
+      <div>Web Header</div>
       <button
         onClick={() => broadCastEvent('2nd broadcast from header', dispatch)}
       >
