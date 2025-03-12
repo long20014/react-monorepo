@@ -2,6 +2,10 @@
 import React, { useEffect } from 'react';
 import eventManagerService from '../../services/eventManagerService';
 import eventBus from '../../services/eventBusServices';
+import { storeTopicData } from '@/context/AppContext/action';
+import { useAppContext } from '@/context/AppContext';
+import { DispatchAction } from '@/context/AppContext/types';
+import { TOPIC_NAME } from '@/utils/constants';
 
 export type HeaderEventData = { text: string };
 
@@ -14,19 +18,23 @@ export type HeaderEventData = { text: string };
 //   });
 // };
 
-const broadCastEvent = (text: string) => {
-  eventBus.dispatch<HeaderEventData>('headerEvent', { text });
+const broadCastEvent = (text: string, dispatch: DispatchAction) => {
+  // eventBus.dispatch<HeaderEventData>('headerEvent', { text });
+  dispatch(storeTopicData(TOPIC_NAME.HEADER_EVENT, { text }));
 };
 
 function Header() {
+  const { dispatch } = useAppContext();
   useEffect(() => {
-    broadCastEvent('1st broadcast from header');
+    broadCastEvent('1st broadcast from header', dispatch);
   }, []);
 
   return (
     <div>
       <div>Header</div>
-      <button onClick={() => broadCastEvent('2nd broadcast from header')}>
+      <button
+        onClick={() => broadCastEvent('2nd broadcast from header', dispatch)}
+      >
         broadcast
       </button>
     </div>

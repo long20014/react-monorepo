@@ -1,6 +1,6 @@
 import Body from '@/components/body/body';
 import Header from '@/components/header/header';
-import { AppStateProvider } from '@/context/AppStateProvider';
+import { AppStateProvider } from '@/context/AppContext';
 import { add } from '@repo/core/add';
 
 function Page() {

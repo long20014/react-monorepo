@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import eventManagerService from '../../services/eventManagerService';
 import eventBus from '../../services/eventBusServices';
 import { HeaderEventData } from '../header/header';
+import { useAppContext } from '@/context/AppContext';
+import { TOPIC_NAME } from '@/utils/constants';
 
 const firstMessageFromWeb = 'this is 1st message from web';
 export const wait = (second: number) =>
@@ -17,6 +19,7 @@ function Body() {
   const [isInit, setIsInit] = useState(false);
   const [message, setMessage] = useState('no message receive');
   const [messageFromSub, setMessageFromSub] = useState('No message from sub');
+  const { state } = useAppContext();
 
   useEffect(() => {
     const handleHandShakeMessage = (event: MessageEvent) => {
@@ -67,27 +70,24 @@ function Body() {
     };
   }, [message]);
 
+  // useEffect(() => {
+  //   const headerEventListener = (data?: HeaderEventData) => {
+  //     if (!data) return;
+  //     console.log(data);
+  //     setMessageFromSub(data.text);
+  //   };
+  //   eventBus.on<HeaderEventData>('headerEvent', headerEventListener);
+  //   return () => {
+  //     eventBus.remove<HeaderEventData>('headerEvent', headerEventListener);
+  //   };
+  // }, []);
+
   useEffect(() => {
-    // const headerSubscriber = eventManagerService.subscribe(
-    //   'headerEvent',
-    //   (event: any) => {
-    //     console.log(event);
-    //     setMessageFromSub(event.data.text);
-    //   }
-    // );
-    // return () => {
-    //   eventManagerService.destroy(headerSubscriber);
-    // };
-    const headerEventListener = (data?: HeaderEventData) => {
-      if (!data) return;
-      console.log(data);
-      setMessageFromSub(data.text);
-    };
-    eventBus.on<HeaderEventData>('headerEvent', headerEventListener);
-    return () => {
-      eventBus.remove<HeaderEventData>('headerEvent', headerEventListener);
-    };
-  }, []);
+    const headerEvent = state.topicSet[TOPIC_NAME.HEADER_EVENT];
+    if (headerEvent) {
+      setMessageFromSub(headerEvent.message.data.text);
+    }
+  }, [state.topicSet[TOPIC_NAME.HEADER_EVENT]]);
 
   return (
     <div style={{ marginTop: '10px' }}>
