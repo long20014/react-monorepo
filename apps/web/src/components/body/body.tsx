@@ -2,7 +2,9 @@
 import React from 'react';
 import { useCommunicator } from '@repo/core/communicator';
 import { useEffect, useState } from 'react';
-import eventManagerService from '../../services/eventManagerService';
+import eventManagerService, {
+  EventType,
+} from '../../services/eventManagerService';
 import eventBus from '../../services/eventBusServices';
 import { HeaderEventData } from '../header/header';
 import { useAppContext } from '@/context/AppContext';
@@ -88,6 +90,13 @@ function Body() {
       setMessageFromSub((headerEvent.data as { text: string }).text);
     }
   }, [state.topicSet[TOPIC_NAME.HEADER_EVENT]]);
+
+  // useEffect(() => {
+  //   eventManagerService.subscribe('headerEvent', (event: EventType) => {
+  //     const { data } = event;
+  //     setMessageFromSub((data as HeaderEventData).text);
+  //   });
+  // }, []);
 
   return (
     <div style={{ marginTop: '10px' }}>

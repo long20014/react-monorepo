@@ -27,6 +27,7 @@ function Header() {
   const { dispatch } = useAppContext();
   useEffect(() => {
     broadCastEvent('1st broadcast from header', dispatch);
+    // broadCastEvent('1st broadcast from header');
   }, []);
 
   return (
@@ -34,6 +35,7 @@ function Header() {
       <div>Web Header</div>
       <button
         onClick={() => broadCastEvent('2nd broadcast from header', dispatch)}
+        // onClick={() => broadCastEvent('2nd broadcast from header')}
       >
         broadcast
       </button>

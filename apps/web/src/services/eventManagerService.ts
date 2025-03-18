@@ -1,6 +1,9 @@
 import { Observable, Observer, Subject, Subscription } from 'rxjs';
 import { filter, share } from 'rxjs/operators';
 
+export type EventType =
+  { name: string, data: unknown };
+
 export class EventManagerService {
   private observable: Observable<any>;
   private observer: Observer<any>;
@@ -24,10 +27,10 @@ export class EventManagerService {
   /**
    * Method to subscribe to an event with callback
    */
-  public subscribe(eventName: string, callback: any) {
+  public subscribe(eventName: string, callback: (event: EventType) => void) {
     const subscriber: Subscription = this.observable
       .pipe(
-        filter(event => {
+        filter((event: EventType) => {
           return event.name === eventName;
         })
       )
