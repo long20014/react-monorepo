@@ -23,7 +23,7 @@ function Body() {
 
   useEffect(() => {
     const handleHandShakeMessage = (event: MessageEvent) => {
-      if (event.origin !== 'http://localhost:3001') return;
+      if (event.origin !== 'http://localhost:3008') return;
       setMessage(`${event.data} (id: ${event.lastEventId})`);
       if (!isConnect) {
         setIsConnect(true);
@@ -37,7 +37,7 @@ function Body() {
       //   'http://localhost:3001'
       // );
       let iframeWindow = window?.top?.frames[0];
-      iframeWindow?.postMessage(firstMessageFromWeb, 'http://localhost:3001');
+      iframeWindow?.postMessage(firstMessageFromWeb, 'http://localhost:3008');
     };
     if (!isInit) {
       setIsInit(true);

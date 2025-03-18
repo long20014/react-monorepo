@@ -15,7 +15,7 @@ function Body() {
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== 'http://localhost:3000') return;
+      if (event.origin !== 'http://localhost:3009') return;
       setMessage(`${event.data} (id: ${event.lastEventId})`);
       if (!isConnect) {
         setIsConnect(true);
@@ -25,7 +25,7 @@ function Body() {
     if (!isInit && !isConnect) {
       setIsInit(true);
       const parentElement = window.parent;
-      parentElement?.postMessage(firstMessageFromDoc, 'http://localhost:3000');
+      parentElement?.postMessage(firstMessageFromDoc, 'http://localhost:3009');
     }
     window.addEventListener('message', handleMessage);
     return () => {
@@ -51,7 +51,7 @@ function Body() {
           const parentElement = window.parent;
           parentElement?.postMessage(
             'new message from doc',
-            'http://localhost:3000'
+            'http://localhost:3009'
           );
         }}
       >
