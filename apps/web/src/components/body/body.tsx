@@ -30,7 +30,7 @@ function Body() {
       }
     };
 
-    const postMessage = async () => {
+    const postFirstMessage = async () => {
       // let iframeElement = document.querySelector('iframe');
       // iframeElement?.contentWindow?.postMessage(
       //   messageFromWeb,
@@ -43,7 +43,7 @@ function Body() {
       setIsInit(true);
     }
     if (isConnect && !isFirstMsgPosted) {
-      postMessage();
+      postFirstMessage();
       setIsFirstMsgPosted(true);
     }
     window.addEventListener('message', handleHandShakeMessage, false);
