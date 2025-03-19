@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 const firstMessageFromDoc = 'this is 1st message from docs';
 
 function Body() {
-  const [isInit, setIsInit] = useState(false);
   const [isConnect, setIsConnect] = useState(false);
   const [message, setMessage] = useState('no message received');
   const [messageFromSub, setMessageFromSub] = useState('No message from sub');
@@ -22,8 +21,7 @@ function Body() {
       }
       // event?.ports[0]?.postMessage(messageFromDoc);
     };
-    if (!isInit && !isConnect) {
-      setIsInit(true);
+    if (!isConnect) {
       const parentElement = window.parent;
       parentElement?.postMessage(firstMessageFromDoc, 'http://localhost:3009');
     }
@@ -31,7 +29,7 @@ function Body() {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [message, isConnect]);
+  }, [isConnect]);
 
   useEffect(() => {
     const headerEvent = appState.topicSet[TOPIC_NAME.HEADER_EVENT];

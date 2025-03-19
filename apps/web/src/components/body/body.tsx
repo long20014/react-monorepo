@@ -15,10 +15,8 @@ export const wait = (second: number) =>
   new Promise((res) => setTimeout(res, second * 1000));
 
 function Body() {
-  const { port1, port2 } = useCommunicator();
+  // const { port1, port2 } = useCommunicator();
   const [isConnect, setIsConnect] = useState(false);
-  const [isFirstMsgPosted, setIsFirstMsgPosted] = useState(false);
-  const [isInit, setIsInit] = useState(false);
   const [message, setMessage] = useState('no message receive');
   const [messageFromSub, setMessageFromSub] = useState('No message from sub');
   const { state } = useAppContext();
@@ -28,6 +26,7 @@ function Body() {
       if (event.origin !== 'http://localhost:3008') return;
       setMessage(`${event.data} (id: ${event.lastEventId})`);
       if (!isConnect) {
+        postFirstMessage();
         setIsConnect(true);
       }
     };
@@ -41,13 +40,6 @@ function Body() {
       let iframeWindow = window?.top?.frames[0];
       iframeWindow?.postMessage(firstMessageFromWeb, 'http://localhost:3008');
     };
-    if (!isInit) {
-      setIsInit(true);
-    }
-    if (isConnect && !isFirstMsgPosted) {
-      postFirstMessage();
-      setIsFirstMsgPosted(true);
-    }
     window.addEventListener('message', handleHandShakeMessage, false);
     // let iframeElement = document.querySelector('iframe');
     // const onMessage = (e: MessageEvent) => {
@@ -70,7 +62,7 @@ function Body() {
     return () => {
       window.removeEventListener('message', handleHandShakeMessage);
     };
-  }, [message]);
+  }, [isConnect]);
 
   // useEffect(() => {
   //   const headerEventListener = (data?: HeaderEventData) => {
